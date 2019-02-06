@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "segment_end:segment.c">
+      </ContextState>
+      <ContextState
+         contextName = "-[SegmentStreamer seekTo:]:SegmentStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self-&gt;_stream.length">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__91-[RTPAVAssetResourceLoaderDelegate resourceLoader:shouldWaitForLoadingOfRequestedResource:]_block_invoke:RTPAVAssetResourceLoaderDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "data.length">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "mov_write_header:movenc.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "s-&gt;pb">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "avio_alloc_context:aviobuf.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(char *)(opaque)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "io_open:FFmpegFileStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "s">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[ViewController newAssetAvailable:]_block_invoke:ViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.player">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "io_open:FFmpegStreamer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[HTTPStreamer proccessHeaderFor:]:HTTPStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[response expectedContentLength]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[SegmentStreamer writeData:length:]_block_invoke:SegmentStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.offset">
+            </PersistentString>
+            <PersistentString
+               value = "buffer[5]">
+            </PersistentString>
+            <PersistentString
+               value = "self-&gt;_offset + len">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RTPURLAsset initWithStreamer:options:]:RTPURLAsset.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[FFmpegWorkItem makeMuxingFrom:to:]:FFmpegStreamer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[FFmpegFileWorkItem startLoading]:FFmpegFileStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "avioContext">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "init_muxer [inlined]:mux.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "s-&gt;oformat-&gt;priv_class">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;priv_data">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;filename">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RTSPSegmentController isActive]:RTSPSegmentController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self-&gt;_RTSPSegmenter.isCanceled">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[HTTPStreamer removeTask:]:HTTPStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.sessionTasks">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[HTTPStreamer URLSession:dataTask:didReceiveData:]:HTTPStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dataTask">
+            </PersistentString>
+            <PersistentString
+               value = "data.length">
+            </PersistentString>
+            <PersistentString
+               value = "dataTask.originalRequest.allHTTPHeaderFields[@&quot;Range&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "_loadedDataLength">
+            </PersistentString>
+            <PersistentString
+               value = "response.statusCode">
+            </PersistentString>
+            <PersistentString
+               value = "[NSString stringWithUTF8String:[data bytes]]">
+            </PersistentString>
+            <PersistentString
+               value = "_contentLength">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "avio_flush:aviobuf.c">
+      </ContextState>
+      <ContextState
+         contextName = "segment_mux_init:segment.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "s-&gt;io_close">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;io_open">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[FFmpegWorkItem startLoading]:FFmpegStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "ofmt_ctx-&gt;pb">
+            </PersistentString>
+            <PersistentString
+               value = "in_stream-&gt;codec">
+            </PersistentString>
+            <PersistentString
+               value = "in_stream-&gt;codec-&gt;codec">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RTSPSegmenter makeMuxingFrom:to:stream_mapping:stream_mapping_size:]:RTSPSegmenter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "pkt.pts">
+            </PersistentString>
+            <PersistentString
+               value = "pkt.dts">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RTPAVAssetResourceLoaderDelegate responseBody:withData:forLoadingRequest:]:RTPAVAssetResourceLoaderDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "data.length">
+            </PersistentString>
+            <PersistentString
+               value = "loadingRequest.dataRequest.requestedLength">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "av_interleaved_write_frame:mux.c">
+      </ContextState>
+      <ContextState
+         contextName = "-[SegmentStreamer offset]:SegmentStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.changeableStreamerdelegate">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "avio_write:aviobuf.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "s-&gt;buffer[2]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[SegmentsManager createStreamWithUrl:]_block_invoke:SegmentsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSURL fileURLWithPath:url]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "flush_buffer [inlined]:aviobuf.c">
+      </ContextState>
+      <ContextState
+         contextName = "-[FFmpegWorkItem add_out_stream:basedOn:]:FFmpegStreamer.m">
+      </ContextState>
+      <ContextState
+         contextName = "seg_init:segment.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "seg-&gt;oformat">
+            </PersistentString>
+            <PersistentString
+               value = "seg-&gt;format_options_str">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "avio_read:aviobuf.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "s-&gt;buffer_size">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;direct">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;buf_end - s-&gt;buf_ptr">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;write_flag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "fill_buffer:aviobuf.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "s-&gt;bytes_read">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;read_packet">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;pos">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;buf_ptr - s-&gt;buf_end">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;buf_ptr">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;buf_end">
+            </PersistentString>
+            <PersistentString
+               value = "s-&gt;buf_end - s-&gt;buffer">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__41-[RTPURLAsset dataChunkLoadded:forRange:]_block_invoke:RTPURLAsset.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self-&gt;_URLs">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "mov_init:movenc.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RTPAVAssetResourceLoaderDelegate resourceLoader:shouldWaitForLoadingOfRequestedResource:]:RTPAVAssetResourceLoaderDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "requestedOffset">
+            </PersistentString>
+            <PersistentString
+               value = "requestedOffset + requestedLength - 1">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RTPURLAsset initWithURLs:options:]:RTPURLAsset.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "URLs">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "seg_write_header:segment.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "oc-&gt;streams[i]">
+            </PersistentString>
+            <PersistentString
+               value = "seg-&gt;write_header_trailer">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "read_packet_wrapper [inlined]:aviobuf.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "buf">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "writeStream:FFmpegStreamer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dataStr.length">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__24-[Requester removeTask:]_block_invoke:Requester.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.loadingRequests">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
