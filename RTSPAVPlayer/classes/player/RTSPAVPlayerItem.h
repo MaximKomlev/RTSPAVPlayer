@@ -11,9 +11,18 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+@protocol RTSPAVPlayerItemDelegate <NSObject>
+
+- (void)dataLoaded;
+
+@end
+
 @interface RTSPAVPlayerItem : AVPlayerItem
 
 @property BOOL isPlaying;
+@property (readonly) BOOL isLoaded;
+
+@property (nonatomic, weak) id<RTSPAVPlayerItemDelegate> _Nullable delegate;
 
 @end
 

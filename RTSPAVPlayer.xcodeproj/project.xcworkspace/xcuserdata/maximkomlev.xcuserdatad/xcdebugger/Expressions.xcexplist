@@ -71,10 +71,10 @@
                value = "self.offset">
             </PersistentString>
             <PersistentString
-               value = "buffer[5]">
+               value = "self-&gt;_offset + len">
             </PersistentString>
             <PersistentString
-               value = "self-&gt;_offset + len">
+               value = "buffer[5]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -82,7 +82,12 @@
          contextName = "-[RTPURLAsset initWithStreamer:options:]:RTPURLAsset.m">
       </ContextState>
       <ContextState
-         contextName = "-[FFmpegWorkItem makeMuxingFrom:to:]:FFmpegStreamer.m">
+         contextName = "-[RTSPSegmentController isActive]:RTSPSegmentController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self-&gt;_RTSPSegmenter.isCanceled">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[FFmpegFileWorkItem startLoading]:FFmpegFileStreamer.m">
@@ -107,12 +112,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[RTSPSegmentController isActive]:RTSPSegmentController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self-&gt;_RTSPSegmenter.isCanceled">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "-[FFmpegWorkItem makeMuxingFrom:to:]:FFmpegStreamer.m">
       </ContextState>
       <ContextState
          contextName = "-[HTTPStreamer removeTask:]:HTTPStreamer.m">
@@ -149,16 +149,24 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "avio_flush:aviobuf.c">
+         contextName = "-[RTPAVAssetResourceLoaderDelegate responseBody:withData:forLoadingRequest:]:RTPAVAssetResourceLoaderDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "data.length">
+            </PersistentString>
+            <PersistentString
+               value = "loadingRequest.dataRequest.requestedLength">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "segment_mux_init:segment.c">
          <PersistentStrings>
             <PersistentString
-               value = "s-&gt;io_close">
+               value = "s-&gt;io_open">
             </PersistentString>
             <PersistentString
-               value = "s-&gt;io_open">
+               value = "s-&gt;io_close">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -188,15 +196,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[RTPAVAssetResourceLoaderDelegate responseBody:withData:forLoadingRequest:]:RTPAVAssetResourceLoaderDelegate.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "data.length">
-            </PersistentString>
-            <PersistentString
-               value = "loadingRequest.dataRequest.requestedLength">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "avio_flush:aviobuf.c">
       </ContextState>
       <ContextState
          contextName = "av_interleaved_write_frame:mux.c">
@@ -235,10 +235,10 @@
          contextName = "seg_init:segment.c">
          <PersistentStrings>
             <PersistentString
-               value = "seg-&gt;oformat">
+               value = "seg-&gt;format_options_str">
             </PersistentString>
             <PersistentString
-               value = "seg-&gt;format_options_str">
+               value = "seg-&gt;oformat">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -246,7 +246,7 @@
          contextName = "avio_read:aviobuf.c">
          <PersistentStrings>
             <PersistentString
-               value = "s-&gt;buffer_size">
+               value = "s-&gt;write_flag">
             </PersistentString>
             <PersistentString
                value = "s-&gt;direct">
@@ -255,7 +255,7 @@
                value = "s-&gt;buf_end - s-&gt;buf_ptr">
             </PersistentString>
             <PersistentString
-               value = "s-&gt;write_flag">
+               value = "s-&gt;buffer_size">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -278,10 +278,10 @@
                value = "s-&gt;buf_ptr">
             </PersistentString>
             <PersistentString
-               value = "s-&gt;buf_end">
+               value = "s-&gt;buf_end - s-&gt;buffer">
             </PersistentString>
             <PersistentString
-               value = "s-&gt;buf_end - s-&gt;buffer">
+               value = "s-&gt;buf_end">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -317,6 +317,23 @@
          <PersistentStrings>
             <PersistentString
                value = "URLs">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RTSPAVPlayer observeValueForKeyPath:ofObject:change:context:]:RTPSAVPlayer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "CMTimeGetSeconds(self.currentItem.duration)">
+            </PersistentString>
+            <PersistentString
+               value = "self.currentItem">
+            </PersistentString>
+            <PersistentString
+               value = "self.currentItem.duration">
+            </PersistentString>
+            <PersistentString
+               value = "self.rate">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -31,6 +31,11 @@ static int AAPLPlayerKVOContext = 0;
         _RTSPSegmentController = [[RTSPSegmentController alloc] initWithUrl:url withOptions:options];
         _RTSPSegmentController.delegate = self;
         _assetKeys = itemAutoLoadedAssetKeys;
+        
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(playerStalled:)
+                                                     name: AVPlayerItemPlaybackStalledNotification
+                                                   object: NULL];
     }
     return self;
 }
@@ -82,16 +87,19 @@ static int AAPLPlayerKVOContext = 0;
         //        [self seekToTime:kCMTimeZero toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero];
         [self seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:self.currentTime];
         [item seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:self.currentTime];
+    } else if ([keyPath isEqualToString:@"rate"]) {
     }
 }
 
 - (void)addObservers {
     [self addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:&AAPLPlayerKVOContext];
+    [self addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:&AAPLPlayerKVOContext];
 }
 
 - (void)removeObservers {
     if ([self observationInfo]) {
         [self removeObserver:self forKeyPath:@"currentItem"];
+        [self removeObserver:self forKeyPath:@"rate"];
     }
 }
 
@@ -112,7 +120,7 @@ static int AAPLPlayerKVOContext = 0;
 
 - (void)headerLoadded:(NSDictionary *)header
                 asset:(RTSPURLAsset *)asset {
-    NSLog(@"RTSPAVPlayer:headerLoadded, completely url: %@", asset.URL.absoluteString);
+    NSLog(@"RTSPAVPlayer:headerLoadded, completely url: %@, header: %@", asset.URL.absoluteString, header);
 }
 
 - (void)dataLoaddedForRange:(NSRange)range
@@ -124,6 +132,12 @@ static int AAPLPlayerKVOContext = 0;
             forRange:(NSRange)range
                asset:(RTSPURLAsset *)asset {
     NSLog(@"RTSPAVPlayer:errorLoading, error: %@, for range: %@", error.localizedDescription, [NSValue valueWithRange:range]);
+}
+
+- (void)playerStalled:(NSNotification *)notification {
+    if (notification.object == self) {
+        
+    }
 }
 
 @end

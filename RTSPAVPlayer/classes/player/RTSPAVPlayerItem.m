@@ -14,12 +14,14 @@
 @implementation RTSPAVPlayerItem
 
 @synthesize isPlaying = _isPlaying;
+@synthesize isLoaded = _isLoaded;
 
 static int AAPLPlayerItemKVOContext = 0;
 
 - (id)initWithURL:(NSURL *)URL {
     if (self = [super initWithURL:URL]) {
         [self addObservers];
+        _isLoaded = FALSE;
     }
     return self;
 }
@@ -27,6 +29,7 @@ static int AAPLPlayerItemKVOContext = 0;
 - (id)initWithAsset:(AVAsset *)asset {
     if (self = [super initWithAsset:asset]) {
         [self addObservers];
+        _isLoaded = FALSE;
     }
     return self;
 }
@@ -34,6 +37,7 @@ static int AAPLPlayerItemKVOContext = 0;
 - (id)initWithAsset:(AVAsset *)asset automaticallyLoadedAssetKeys:(NSArray<NSString *> *)automaticallyLoadedAssetKeys {
     if (self = [super initWithAsset:asset automaticallyLoadedAssetKeys:automaticallyLoadedAssetKeys]) {
         [self addObservers];
+        _isLoaded = FALSE;
     }
     return self;
 }
@@ -57,11 +61,17 @@ static int AAPLPlayerItemKVOContext = 0;
     }
 
     if ([keyPath isEqualToString:@"status"]) {
-        NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath status.url: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
+        if (self.status == AVPlayerItemStatusFailed) {
+            NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath status.fail.url: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
+        }
     } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
         NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath playbackBufferEmpty.url: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
     } else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath playbackLikelyToKeepUp.url: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
+        _isLoaded = TRUE;
+        if ([self.delegate respondsToSelector:@selector(dataLoaded)]) {
+            [self.delegate dataLoaded];
+        }
     } else if ([keyPath isEqualToString:@"AVPlayerItemDidPlayToEndTimeNotification"]) {
         NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath AVPlayerItemDidPlayToEndTimeNotificationurl: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
     }
