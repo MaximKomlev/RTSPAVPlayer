@@ -56,7 +56,6 @@
 }
 
 - (void)dealloc {
-    [self cancelRequests];
 }
 
 - (instancetype)init {
@@ -69,10 +68,6 @@
 
 + (NSString *)scheme {
     return NSStringFromClass(self);
-}
-
-- (void)cancelRequests {
-    [self.streamer cancellAllRequests];
 }
 
 #pragma mark - Resource loader delegate
@@ -122,22 +117,21 @@
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    [self.streamer cancelRequestFor:loadingRequest];
 }
 
 #pragma mark - StreamerDelegate
 
 - (void)responseHeader:(id<Streamer>)source withData:(NSDictionary *)data forLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    dispatch_sync(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{
         if (loadingRequest.contentInformationRequest) {
             [self processContentInformation:loadingRequest.contentInformationRequest fromHeader:data];
             [loadingRequest finishLoading];
         }
-    });
+//    });
 }
 
 - (void)responseBody:(id<Streamer>)source withData:(NSData *)data forLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    dispatch_sync(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{
         [loadingRequest.dataRequest respondWithData:data];
         if ([self.delegate respondsToSelector:@selector(dataChunkLoadded:forRange:)]) {
             NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
@@ -147,11 +141,11 @@
 
             [self.delegate dataChunkLoadded:data forRange:range];
         }
-    });
+//    });
 }
 
 - (void)responseEnd:(id<Streamer>)source forLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest withError:(NSError * _Nullable)error {
-    dispatch_sync(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{
         NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
         NSInteger requestedLength = loadingRequest.dataRequest.requestedLength;
         
@@ -181,7 +175,7 @@
         if (error && isNetworkError) {
             self.loadingError = [LoadingError createWithError:error];
         }
-    });
+//    });
 }
 
 #pragma mark - Downloaded data processing

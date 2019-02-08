@@ -187,8 +187,6 @@ static int interrupt_cb(void *ctx) {
     // in options
     av_dict_set(&opts, "rtsp_transport", "tcp", 0); // !!!
     av_dict_set_int(&opts, "analyzeduration", 5, 0);
-    av_dict_set_int(&opts, "reorder_queue_size", 1 ,0);
-    av_dict_set(&opts, "buffer_size", "262144" ,0);
 
     // out options
     av_dict_set(&opts, "f", out_formatname, 0);
@@ -196,9 +194,10 @@ static int interrupt_cb(void *ctx) {
     av_dict_set(&opts, "segment_time", "4", 0);
     av_dict_set(&opts, "reset_timestamps", "1", 0);
     av_dict_set(&opts, "segment_time_delta", "0.5", 0);
-    av_dict_set(&opts, "segment_atclocktime", "1", 0);
+//    av_dict_set(&opts, "segment_atclocktime", "1", 0);
 //    av_dict_set_int(&opts, "increment_tc", 1, 0);
-    av_dict_set(&opts, "segment_format_options", "movflags=+faststart:avioflags=+direct:probesize=+32:fflags=+discardcorrupt+genpts+sortdts+shortest", 0); //movflags=+separate_moof
+    av_dict_set(&opts, "segment_format_options", "fflags=+discardcorrupt+genpts+sortdts+shortest", 0);
+//    av_dict_set(&opts, "segment_format_options", "movflags=+faststart", 0); //
 
     //    av_dict_set_int(&opts, "frames", 5, 0);
     //    av_dict_set_int(&opts, "sync-av-start", 1, 0);
@@ -251,7 +250,7 @@ static int interrupt_cb(void *ctx) {
         ofmt_ctx->interrupt_callback.opaque = ofmt_ctx;
         ofmt_ctx->io_open = &io_open;
         ofmt_ctx->io_close = &io_close;
-        ofmt_ctx->debug = FF_FDEBUG_TS;
+//        ofmt_ctx->debug = FF_FDEBUG_TS;
         
         int stream_index = 0;
         int *stream_mapping = NULL;

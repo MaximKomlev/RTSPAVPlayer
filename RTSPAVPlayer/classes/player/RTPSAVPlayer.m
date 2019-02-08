@@ -66,10 +66,6 @@ static int AAPLPlayerViewControllerKVOContext = 0;
     }
     
     if ([keyPath isEqualToString:@"currentItem"]) {
-//        [self seekToTime:kCMTimeZero];
-//        [self seekToTime:kCMTimeZero toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero];
-        [self seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:self.currentTime];
-
         [self.items enumerateObjectsUsingBlock:^(AVPlayerItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)obj;
             if (item) {
@@ -79,6 +75,15 @@ static int AAPLPlayerViewControllerKVOContext = 0;
         RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)self.currentItem;
         if (item) {
             item.isPlaying = TRUE;
+            NSLog(@"ViewController:observeValueForKeyPath currentItem.url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
+        }
+
+        //        [self seekToTime:kCMTimeZero];
+        //        [self seekToTime:kCMTimeZero toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero];
+        [self seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:self.currentTime];
+        [item seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:self.currentTime];
+        if ([item isPlaybackBufferFull]) {
+            
         }
         [super play];
     }
@@ -97,27 +102,32 @@ static int AAPLPlayerViewControllerKVOContext = 0;
 #pragma mark - RTSPSegmentControllerDelegate
 
 - (void)newSegmentReady:(RTSPSegmentStreamer *)segment {
-    RTSPURLAsset *asset = [[RTSPURLAsset alloc] initWithStreamer:(id)segment options:@{@"timeout": [NSNumber numberWithDouble:defaultLoadingTimeout]}];
-    asset.delegate = self;
-    [self insertItem:[RTSPAVPlayerItem playerItemWithAsset:asset automaticallyLoadedAssetKeys:self->_assetKeys] afterItem:NULL];
+    dispatch_sync( dispatch_get_main_queue(), ^{
+        NSLog(@"ViewController:newSegmentReady, current count: %d", self.items.count);
+
+        RTSPURLAsset *asset = [[RTSPURLAsset alloc] initWithStreamer:(id)segment options:@{@"timeout": [NSNumber numberWithDouble:defaultLoadingTimeout]}];
+        asset.delegate = self;
+        [self insertItem:[RTSPAVPlayerItem playerItemWithAsset:asset automaticallyLoadedAssetKeys:self->_assetKeys] afterItem:NULL];
+        [super play];
+    });
 }
 
 #pragma mark - RTSPAVAssetDelegate
 
 - (void)headerLoadded:(NSDictionary *)header
                 asset:(RTSPURLAsset *)asset {
-    //NSLog(@"ViewController:headerLoadded, completely url: %@", asset.URL.absoluteString);
+    NSLog(@"ViewController:headerLoadded, completely url: %@", asset.URL.absoluteString);
 }
 
 - (void)dataLoaddedForRange:(NSRange)range
                       asset:(RTSPURLAsset *)asset {
-    //NSLog(@"ViewController:newDataLoadded, range: %@, url: %@", [NSValue valueWithRange:range], asset.URL.absoluteString);
+    NSLog(@"ViewController:newDataLoadded, range: %@, url: %@", [NSValue valueWithRange:range], asset.URL.absoluteString);
 }
 
 - (void)errorLoading:(NSError *)error
             forRange:(NSRange)range
                asset:(RTSPURLAsset *)asset {
-    //NSLog(@"ViewController:errorLoading, error: %@, for range: %@", error.localizedDescription, [NSValue valueWithRange:range]);
+    NSLog(@"ViewController:errorLoading, error: %@, for range: %@", error.localizedDescription, [NSValue valueWithRange:range]);
 }
 
 @end

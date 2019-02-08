@@ -32,7 +32,6 @@
 }
 
 - (void)shutdown {
-    [self->_resourceLoaderDelegate cancelRequests];
 }
 
 #pragma mark - RTPAVAssetResourceLoaderDelegate

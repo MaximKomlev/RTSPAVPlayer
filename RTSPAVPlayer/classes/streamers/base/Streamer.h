@@ -19,9 +19,7 @@
 
 - (void)performRequest:(NSDictionary<NSString *, NSObject *> * _Nullable)params forAVLoadingRequest:(AVAssetResourceLoadingRequest *_Nonnull)loadingRequest;
 
-- (BOOL)isActive:(NSString * _Nonnull)taskId;
-- (void)cancelRequestFor:(AVAssetResourceLoadingRequest * _Nonnull)loadingRequest;
-- (void)cancellAllRequests;
+- (BOOL)isActive;
 
 @property (strong, nonatomic, readonly) NSURL * _Nonnull sessionUrl;
 @property (nonatomic, weak) NSObject<StreamerDelegate> * _Nullable delegate;

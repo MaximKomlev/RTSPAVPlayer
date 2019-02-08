@@ -5,7 +5,6 @@
 
 @interface ReadableWritableSegmentStreamer () {
     NSInteger _offset;
-    dispatch_queue_t _queue;
     BOOL _isFinished;
 }
 
@@ -16,9 +15,7 @@
 @interface RTSPSegmentStreamer () <NSStreamDelegate> {
     NSMutableData *_stream;
     dispatch_queue_t _queue;
-    NSLock *_locker;
-    NSMutableDictionary<NSNumber *, dispatch_block_t> *_tasks;
-    
+
     ReadableWritableSegmentStreamer *_writeInterface;
     ReadableWritableSegmentStreamer *_readInterface;
 }
@@ -28,13 +25,14 @@
 - (NSInteger)writeData:(const uint8_t *)buffer at:(NSUInteger)position length:(NSUInteger)length;
 - (NSData *)readDataAt:(NSUInteger)position length:(NSUInteger)length;
 
+- (void)synchronizedAccess:(synchronized_block)block;
+
 @end
 
 @implementation ReadableWritableSegmentStreamer
 
 - (instancetype)init {
     if (self = [super init]) {
-        _queue = dispatch_queue_create("_ReadableWritableSegmentStreamer_", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -48,39 +46,39 @@
 }
 
 - (NSInteger)writeData:(const uint8_t *)buffer length:(NSUInteger)length {
-    dispatch_sync(_queue, ^{
+    [_stream synchronizedAccess: ^{
         [self->_stream writeData:buffer at:self->_offset length:length];
         self->_offset += length;
-    });
+    }];
     return length;
  }
 
 - (NSData *)readData:(NSUInteger)length {
     __block NSData *data = NULL;
-    dispatch_sync(_queue, ^{
+    [_stream synchronizedAccess: ^{
         data = [self->_stream readDataAt:self->_offset length:length];
         self->_offset += data.length;
-    });
+    }];
     return data;
 }
 
 - (void)seekTo:(NSUInteger)position {
-    dispatch_sync(_queue, ^{
+    [_stream synchronizedAccess: ^{
         self->_offset = position;
-    });
+    }];
 }
 
 - (void)finish {
-    dispatch_sync(_queue, ^{
+    [_stream synchronizedAccess: ^{
         self->_isFinished = TRUE;
-    });
+    }];
 }
 
 - (BOOL)isFinished {
     __block BOOL result = FALSE;
-    dispatch_sync(_queue, ^{
+    [_stream synchronizedAccess: ^{
         result = self->_isFinished;
-    });
+    }];
     return result;
 }
 
@@ -95,9 +93,7 @@ static NSString *_identificatorName = @"streamId";
 
 - (instancetype)init {
     if (self = [super init]) {
-        _locker = [NSLock new];
-        _tasks = [NSMutableDictionary new];
-        _queue = dispatch_queue_create("_SegmentStreamer_", DISPATCH_QUEUE_CONCURRENT);
+        _queue = dispatch_queue_create("_RTSPSegmentStreamer_", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -113,77 +109,38 @@ static NSString *_identificatorName = @"streamId";
 #pragma mark - Request public interface
 
 - (void)performRequest:(NSDictionary<NSString *, NSObject *> * _Nullable)params forAVLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    __weak typeof(self) weakSelf = self;
-    
-    __block dispatch_block_t block = dispatch_block_create(0, ^{
-        if (!(dispatch_block_testcancel(block) && loadingRequest.isCancelled)) {
-            if (loadingRequest.contentInformationRequest) {
-                if ([weakSelf.delegate respondsToSelector:@selector(responseHeader:withData:forLoadingRequest:)]) {
-                    NSInteger length = [weakSelf dataLength];
-                    NSDictionary<NSString *, NSObject *> *header = @{@"MIMEType"        : @"video/mp4",
-                                                                     @"ContentLength"   : [NSNumber numberWithLongLong:length]};
-                    [weakSelf.delegate responseHeader:weakSelf withData:header forLoadingRequest:loadingRequest];
-                }
-            } else if (loadingRequest.dataRequest.requestsAllDataToEndOfResource) {
-                if ([weakSelf.delegate respondsToSelector:@selector(responseBody:withData:forLoadingRequest:)]) {
-                    NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
-                    NSInteger requestedLength = [weakSelf dataLength] - loadingRequest.dataRequest.requestedOffset;
-                    [weakSelf.delegate responseBody:weakSelf withData:[weakSelf readDataForRange:NSMakeRange(requestedOffset, requestedLength)] forLoadingRequest:loadingRequest];
-                }
-                if ([weakSelf.delegate respondsToSelector:@selector(responseEnd:forLoadingRequest:withError:)]) {
-                    [weakSelf.delegate responseEnd:weakSelf forLoadingRequest:loadingRequest withError:NULL];
-                }
-            } else if (loadingRequest.dataRequest) {
+    if (!loadingRequest.isCancelled && [self isReady]) {
+        if (loadingRequest.contentInformationRequest) {
+            if ([self.delegate respondsToSelector:@selector(responseHeader:withData:forLoadingRequest:)]) {
+                NSInteger length = [self dataLength];
+                NSDictionary<NSString *, NSObject *> *header = @{@"MIMEType"        : @"video/mp4",
+                                                                 @"ContentLength"   : [NSNumber numberWithLongLong:length]};
+                [self.delegate responseHeader:self withData:header forLoadingRequest:loadingRequest];
+            }
+        } else if (loadingRequest.dataRequest.requestsAllDataToEndOfResource) {
+            if ([self.delegate respondsToSelector:@selector(responseBody:withData:forLoadingRequest:)]) {
                 NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
-                NSInteger requestedLength = loadingRequest.dataRequest.requestedLength;
-                if ([weakSelf.delegate respondsToSelector:@selector(responseBody:withData:forLoadingRequest:)]) {
-                    [weakSelf.delegate responseBody:weakSelf withData:[weakSelf readDataForRange:NSMakeRange(requestedOffset, requestedLength)] forLoadingRequest:loadingRequest];
-                }
-                if ([weakSelf.delegate respondsToSelector:@selector(responseEnd:forLoadingRequest:withError:)]) {
-                    [weakSelf.delegate responseEnd:weakSelf forLoadingRequest:loadingRequest withError:NULL];
-                }
+                NSInteger requestedLength = [self dataLength] - loadingRequest.dataRequest.requestedOffset;
+                [self.delegate responseBody:self withData:[self readDataForRange:NSMakeRange(requestedOffset, requestedLength)] forLoadingRequest:loadingRequest];
+            }
+            if ([self.delegate respondsToSelector:@selector(responseEnd:forLoadingRequest:withError:)]) {
+                [self.delegate responseEnd:self forLoadingRequest:loadingRequest withError:NULL];
+            }
+        } else if (loadingRequest.dataRequest) {
+            NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
+            NSInteger requestedLength = loadingRequest.dataRequest.requestedLength;
+            if ([self.delegate respondsToSelector:@selector(responseBody:withData:forLoadingRequest:)]) {
+                [self.delegate responseBody:self withData:[self readDataForRange:NSMakeRange(requestedOffset, requestedLength)] forLoadingRequest:loadingRequest];
+            }
+            if ([self.delegate respondsToSelector:@selector(responseEnd:forLoadingRequest:withError:)]) {
+                [self.delegate responseEnd:self forLoadingRequest:loadingRequest withError:NULL];
             }
         }
-        [weakSelf cancelRequestFor:loadingRequest];
-    });
-
-    dispatch_async(_queue, block);
-    
-    [self synchronize:^{
-        NSNumber *key = [NSNumber numberWithUnsignedInteger:loadingRequest.hash];
-        self->_tasks[key] = block;
-    }];
-}
-
-- (void)cancelRequestFor:(AVAssetResourceLoadingRequest *)loadingRequest {
-    [self synchronize:^{
-        NSNumber *key = [NSNumber numberWithUnsignedInteger:loadingRequest.hash];
-        dispatch_block_t block = self->_tasks[key];
-        if (block) {
-            dispatch_block_cancel(block);
-        }
-        [self->_tasks removeObjectForKey:key];
-    }];
-}
-
-- (void)cancellAllRequests {
-    [self synchronize:^{
-        [self->_tasks enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, dispatch_block_t  _Nonnull obj, BOOL * _Nonnull stop) {
-            dispatch_block_t block = self->_tasks[key];
-            if (block) {
-                dispatch_block_cancel(block);
-            }
-            [self->_tasks removeObjectForKey:key];
-        }];
-    }];
+    }
 }
 
 - (BOOL)isActive:(NSString *)taskId {
-    __block BOOL result = FALSE;
-    [self synchronize:^{
-        result = (self->_tasks.count > 0);
-    }];
-    return result;
+    return TRUE;
 }
 
 #pragma mark - RTSPSegmentStreamer
@@ -248,6 +205,12 @@ static NSString *_identificatorName = @"streamId";
     return NULL;
 }
 
+- (void)synchronizedAccess:(synchronized_block)block {
+    dispatch_sync(_queue, ^{
+        block();
+    });
+}
+
 #pragma mark - Helpers
 
 - (NSInteger)dataLength {
@@ -258,15 +221,6 @@ static NSString *_identificatorName = @"streamId";
     UInt8 buffer[range.length];
     [_stream getBytes:&buffer range:range];
     return [NSData dataWithBytes:buffer length:sizeof(buffer)];
-}
-
-#pragma mark - Helpers (Sync)
-
-- (void)synchronize:(synchronized_block)block {
-    [_locker lock]; {
-        block();
-    }
-    [_locker unlock];
 }
 
 @end

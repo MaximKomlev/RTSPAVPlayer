@@ -29,6 +29,4 @@
 
 @property (nonatomic) NSTimeInterval networkTimeout;
 
-- (void)cancelRequests;
-
 @end
