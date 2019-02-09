@@ -22,7 +22,7 @@
         self->_resourceLoaderDelegate = [[RTSPAVAssetResourceLoader alloc] initWithStreamer:streamer];
         self->_resourceLoaderDelegate.networkTimeout = [((NSNumber *)options[@"timeout"]) doubleValue];
         self->_resourceLoaderDelegate.delegate = self;
-        [self.resourceLoader setDelegate:_resourceLoaderDelegate queue:dispatch_get_main_queue()];
+        [self.resourceLoader setDelegate:_resourceLoaderDelegate queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     }
     return self;
 }

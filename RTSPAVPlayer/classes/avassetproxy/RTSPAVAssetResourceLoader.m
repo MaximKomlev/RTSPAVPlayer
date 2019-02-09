@@ -77,26 +77,6 @@
         return NO;
     }
     
-    // check reachability only if there was network error before
-    if (self.loadingError) {
-        BOOL nowReachable = [self isNetworkReachable];
-        if (nowReachable) {
-            self.loadingError = nil;
-        } else if ([[NSDate date] timeIntervalSinceDate:self.loadingError.date] > self.networkTimeout){
-            NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
-            NSInteger requestedLength = loadingRequest.dataRequest.requestedLength;
-            NSRange range = NSMakeRange(requestedOffset, requestedLength);
-
-            if ([self.delegate respondsToSelector:@selector(errorLoading:forRange:)]) {
-                [self.delegate errorLoading:self.loadingError.error forRange:range];
-            }
-            return NO;
-        } else {
-            [loadingRequest finishLoadingWithError:self.loadingError.error];
-            return YES;
-        }
-    }
-
     NSMutableDictionary *params = [NSMutableDictionary new];
     if (loadingRequest.contentInformationRequest) {
         params[@"HTTPMethod"] = @"HEAD";
@@ -122,60 +102,32 @@
 #pragma mark - StreamerDelegate
 
 - (void)responseHeader:(id<Streamer>)source withData:(NSDictionary *)data forLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-//    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         if (loadingRequest.contentInformationRequest) {
             [self processContentInformation:loadingRequest.contentInformationRequest fromHeader:data];
             [loadingRequest finishLoading];
         }
-//    });
+    });
 }
 
 - (void)responseBody:(id<Streamer>)source withData:(NSData *)data forLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-//    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [loadingRequest.dataRequest respondWithData:data];
-        if ([self.delegate respondsToSelector:@selector(dataChunkLoadded:forRange:)]) {
-            NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
-            NSInteger requestedLength = loadingRequest.dataRequest.requestedLength;
-            
-            NSRange range = NSMakeRange(requestedOffset, requestedLength);
-
-            [self.delegate dataChunkLoadded:data forRange:range];
-        }
-//    });
-}
-
-- (void)responseEnd:(id<Streamer>)source forLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest withError:(NSError * _Nullable)error {
-//    dispatch_async(dispatch_get_main_queue(), ^{
         NSInteger requestedOffset = loadingRequest.dataRequest.requestedOffset;
         NSInteger requestedLength = loadingRequest.dataRequest.requestedLength;
         
         NSRange range = NSMakeRange(requestedOffset, requestedLength);
+        if ([self.delegate respondsToSelector:@selector(dataChunkLoadded:forRange:)]) {
+            [self.delegate dataChunkLoadded:data forRange:range];
+        }
+        if ([self.delegate respondsToSelector:@selector(dataLoaddedForRange:)]) {
+            [self.delegate dataLoaddedForRange:range];
+        }
+        [loadingRequest finishLoading];
+    });
+}
 
-        if (error) {
-            [loadingRequest finishLoadingWithError:error];
-            if ([self.delegate respondsToSelector:@selector(errorLoading:forRange:)]) {
-                [self.delegate errorLoading:error forRange:range];
-            }
-        } else {
-            [loadingRequest finishLoading];
-            if ([self.delegate respondsToSelector:@selector(dataLoaddedForRange:)]) {
-                [self.delegate dataLoaddedForRange:range];
-            }
-        }
-        
-        BOOL isCancelledError = [error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled;
-        BOOL isNetworkError = [error.domain isEqualToString:NSURLErrorDomain] && error.code != NSURLErrorCancelled;
-        
-        if (error && !isCancelledError && !isNetworkError) {
-            if ([self.delegate respondsToSelector:@selector(errorLoading:forRange:)]) {
-                [self.delegate errorLoading:error forRange:range];
-            }
-        }
-        
-        if (error && isNetworkError) {
-            self.loadingError = [LoadingError createWithError:error];
-        }
-//    });
+- (void)responseEnd:(id<Streamer>)source forLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest withError:(NSError * _Nullable)error {
 }
 
 #pragma mark - Downloaded data processing
@@ -196,17 +148,6 @@
     if ([self.delegate respondsToSelector:@selector(headerLoadded:)]) {
         [self.delegate headerLoadded:header];
     }
-}
-
-#pragma mark - Helpers
-
-- (BOOL)isNetworkReachable {
-    const char *host_name = [@"google.com" cStringUsingEncoding:NSASCIIStringEncoding];
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, host_name);
-    SCNetworkReachabilityFlags flags;
-    BOOL success = SCNetworkReachabilityGetFlags(reachability, &flags);
-    CFRelease(reachability);
-    return success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
 }
 
 @end

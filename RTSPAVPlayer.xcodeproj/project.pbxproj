@@ -17,6 +17,8 @@
 		BC022CDD21F8F6FC00B5EB64 /* SegmentsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC022CDC21F8F6FC00B5EB64 /* SegmentsManager.m */; };
 		BC022CE021F9077600B5EB64 /* RTSPSegmenter.m in Sources */ = {isa = PBXBuildFile; fileRef = BC022CDF21F9077600B5EB64 /* RTSPSegmenter.m */; };
 		BC022CFB21FBE14800B5EB64 /* RTSPSegmentStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = BC022CF921FBE14800B5EB64 /* RTSPSegmentStreamer.m */; };
+		BC05C083220EA5150079F9B0 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = BC05C081220EA5150079F9B0 /* LICENSE */; };
+		BC05C084220EA5150079F9B0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = BC05C082220EA5150079F9B0 /* README.md */; };
 		BC08B14721EFF5A400F04CDE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BC08B14621EFF5A300F04CDE /* libz.tbd */; };
 		BC08B14921EFF5C100F04CDE /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BC08B14821EFF5C100F04CDE /* libiconv.tbd */; };
 		BC09B7CD21C0805000B0A3E0 /* definitions.m in Sources */ = {isa = PBXBuildFile; fileRef = BC09B7CC21C0805000B0A3E0 /* definitions.m */; };
@@ -31,8 +33,6 @@
 		BC2BD64F218B828C0098C90A /* RTSPAVAssetResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = BC2BD649218B828C0098C90A /* RTSPAVAssetResourceLoader.m */; };
 		BC36982D21B863A9004F9AF3 /* RTSPSegmentController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC36982C21B863A8004F9AF3 /* RTSPSegmentController.m */; };
 		BC62727721B1FCB20047D3F2 /* stringutils.m in Sources */ = {isa = PBXBuildFile; fileRef = BC62727621B1FCB20047D3F2 /* stringutils.m */; };
-		BC8FD197220CC51400C84DD7 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = BC8FD195220CC51400C84DD7 /* LICENSE */; };
-		BC8FD198220CC51400C84DD7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = BC8FD196220CC51400C84DD7 /* README.md */; };
 		BCC85CE221C47EFB0005CBB0 /* RTPSAVPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC85CE121C47EFB0005CBB0 /* RTPSAVPlayer.m */; };
 		BCC85CE521C480690005CBB0 /* RTSPAVPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC85CE421C480690005CBB0 /* RTSPAVPlayerItem.m */; };
 		BCCFFEC021BB47AA00B594AB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCFFEB521BB47A900B594AB /* Accelerate.framework */; };
@@ -73,6 +73,8 @@
 		BC022CDF21F9077600B5EB64 /* RTSPSegmenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTSPSegmenter.m; sourceTree = "<group>"; };
 		BC022CF921FBE14800B5EB64 /* RTSPSegmentStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTSPSegmentStreamer.m; sourceTree = "<group>"; };
 		BC022CFA21FBE14800B5EB64 /* RTSPSegmentStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTSPSegmentStreamer.h; sourceTree = "<group>"; };
+		BC05C081220EA5150079F9B0 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
+		BC05C082220EA5150079F9B0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		BC08B14621EFF5A300F04CDE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		BC08B14821EFF5C100F04CDE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		BC09B7CB21C05D6B00B0A3E0 /* definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = definitions.h; sourceTree = "<group>"; };
@@ -101,8 +103,6 @@
 		BC36982C21B863A8004F9AF3 /* RTSPSegmentController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTSPSegmentController.m; sourceTree = "<group>"; };
 		BC62727521B1FC8F0047D3F2 /* stringutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stringutils.h; sourceTree = "<group>"; };
 		BC62727621B1FCB20047D3F2 /* stringutils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = stringutils.m; sourceTree = "<group>"; };
-		BC8FD195220CC51400C84DD7 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		BC8FD196220CC51400C84DD7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BCC85CE021C47EE40005CBB0 /* RTSPAVPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTSPAVPlayer.h; sourceTree = "<group>"; };
 		BCC85CE121C47EFB0005CBB0 /* RTPSAVPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTPSAVPlayer.m; sourceTree = "<group>"; };
 		BCC85CE321C4805A0005CBB0 /* RTSPAVPlayerItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTSPAVPlayerItem.h; sourceTree = "<group>"; };
@@ -318,8 +318,8 @@
 		BC8FD194220CC4B500C84DD7 /* docs */ = {
 			isa = PBXGroup;
 			children = (
-				BC8FD195220CC51400C84DD7 /* LICENSE */,
-				BC8FD196220CC51400C84DD7 /* README.md */,
+				BC05C081220EA5150079F9B0 /* LICENSE */,
+				BC05C082220EA5150079F9B0 /* README.md */,
 			);
 			name = docs;
 			sourceTree = "<group>";
@@ -572,8 +572,8 @@
 			files = (
 				BC2BD62A218B6B7C0098C90A /* LaunchScreen.storyboard in Resources */,
 				BC2BD627218B6B7C0098C90A /* Assets.xcassets in Resources */,
-				BC8FD198220CC51400C84DD7 /* README.md in Resources */,
-				BC8FD197220CC51400C84DD7 /* LICENSE in Resources */,
+				BC05C084220EA5150079F9B0 /* README.md in Resources */,
+				BC05C083220EA5150079F9B0 /* LICENSE in Resources */,
 				BC2BD625218B6B7A0098C90A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

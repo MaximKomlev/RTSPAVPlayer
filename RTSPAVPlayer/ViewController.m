@@ -37,7 +37,6 @@
                                              options:NULL
                         withItemsAutoLoadedAssetKeys:assetKeys];
 
-    self.player.actionAtItemEnd = AVPlayerActionAtItemEndAdvance;
     if (@available(iOS 10.0, *)) {
         self.player.automaticallyWaitsToMinimizeStalling = FALSE;
     }

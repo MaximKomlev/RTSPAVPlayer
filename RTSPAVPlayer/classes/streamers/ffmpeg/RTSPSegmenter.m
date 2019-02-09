@@ -98,11 +98,11 @@ static void io_close(struct AVFormatContext *s, AVIOContext *pb) {
     NSString *url = [NSString stringWithUTF8String:(char *)ctx->url];
     BOOL isWritable = (BOOL)ctx->writable;
     [[SegmentsManager instance] stopStreamForUrl:url writable:isWritable];
-    if (isWritable) {
-        fprintf(stdout, "Stop writable stream %s", ctx->url);
-    } else {
-        fprintf(stdout, "Stop readable stream %s", ctx->url);
-    }
+//    if (isWritable) {
+//        fprintf(stdout, "Stop writable stream %s", ctx->url);
+//    } else {
+//        fprintf(stdout, "Stop readable stream %s", ctx->url);
+//    }
     free(pb->opaque);
     av_free(pb->buffer);
     avio_context_free(&pb);

@@ -60,26 +60,27 @@ static int AAPLPlayerItemKVOContext = 0;
         return;
     }
 
+//    NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath keyPath[%@].fail.url: %@, change: %@", keyPath, ((RTSPURLAsset *)self.asset).URL.absoluteString, change);
+    
     if ([keyPath isEqualToString:@"status"]) {
         if (self.status == AVPlayerItemStatusFailed) {
-            NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath status.fail.url: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
+            NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath status.fail.url: %@, error: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString, self.error);
         }
     } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
-        NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath playbackBufferEmpty.url: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
     } else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-        NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath playbackLikelyToKeepUp.url: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
         _isLoaded = TRUE;
         if ([self.delegate respondsToSelector:@selector(dataLoaded)]) {
             [self.delegate dataLoaded];
         }
-    } else if ([keyPath isEqualToString:@"AVPlayerItemDidPlayToEndTimeNotification"]) {
-        NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath AVPlayerItemDidPlayToEndTimeNotificationurl: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString);
+    } else if ([keyPath isEqualToString:@"errorLog"]) {
+        NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath status.Fail.url: %@, error: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString, self.error);
     }
 }
 
 - (void)addObservers {
     [self addObserver:self forKeyPath:@"status" options:0 context:&AAPLPlayerItemKVOContext];
-    
+    [self addObserver:self forKeyPath:@"errorLog" options:0 context:&AAPLPlayerItemKVOContext];
+
     [self addObserver:self forKeyPath:@"AVPlayerItemDidPlayToEndTimeNotification" options:0 context:&AAPLPlayerItemKVOContext];
     [self addObserver:self forKeyPath:@"playbackBufferEmpty" options:0 context:&AAPLPlayerItemKVOContext];
     [self addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:0 context:&AAPLPlayerItemKVOContext];
@@ -88,7 +89,8 @@ static int AAPLPlayerItemKVOContext = 0;
 - (void)removeObservers {
     if ([self observationInfo]) {
         [self removeObserver:self forKeyPath:@"status"];
-        
+        [self removeObserver:self forKeyPath:@"errorLog"];
+
         [self removeObserver:self forKeyPath:@"AVPlayerItemDidPlayToEndTimeNotification"];
         [self removeObserver:self forKeyPath:@"playbackBufferEmpty"];
         [self removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];

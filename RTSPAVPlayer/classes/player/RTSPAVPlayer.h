@@ -13,7 +13,7 @@
 
 @class StreamOptions;
 
-@interface RTSPAVPlayer: AVQueuePlayer
+@interface RTSPAVPlayer: AVPlayer
 
 - (instancetype _Nullable)initWithURL:(NSURL * _Nullable)url options:(StreamOptions * _Nullable)options withItemsAutoLoadedAssetKeys:(nullable NSArray<NSString *> *)itemAutoLoadedAssetKeys;
 
