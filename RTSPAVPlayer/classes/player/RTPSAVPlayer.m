@@ -22,6 +22,7 @@
     NSArray *_assetKeys;
     NSMutableArray *_segments;
     id _timeObserverToken;
+    Float64 _currentItemDuration;
 }
 
 static int AAPLPlayerKVOContext = 0;
@@ -85,15 +86,22 @@ static int AAPLPlayerKVOContext = 0;
         if (item) {
             item.isPlaying = TRUE;
         }
+#if TRACE_STATUS || TRACE_ALL
         NSLog(@"RTSPAVPlayer:observeValueForKeyPath currentItem.url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
-        [self seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:self.currentTime];
+#endif
     } else if ([keyPath isEqualToString:@"status"]) {
         if (self.status == AVPlayerStatusFailed) {
+#if TRACE_ERROR || TRACE_ALL
             NSLog(@"RTSPAVPlayer:observeValueForKeyPath status.Fail.url: %@, error: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString, self.error);
+#endif
         } else if (self.status == AVPlayerStatusReadyToPlay) {
+#if TRACE_STATUS || TRACE_ALL
             NSLog(@"RTSPAVPlayer:observeValueForKeyPath status.ReadyToPlay.url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
+#endif
         } else {
+#if TRACE_STATUS || TRACE_ALL
             NSLog(@"RTSPAVPlayer:observeValueForKeyPath status.....url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
+#endif
         }
     }
 }
@@ -112,11 +120,19 @@ static int AAPLPlayerKVOContext = 0;
 
 - (void)addPeriodicTimeObserver {
     __weak typeof(self) weakSelf = self;
-    _timeObserverToken = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.5, NSEC_PER_SEC)
+    _timeObserverToken = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.21, NSEC_PER_SEC)
                                               queue:dispatch_get_main_queue()
                                          usingBlock:^(CMTime time) {
                                              __strong typeof(weakSelf) strongSelf = weakSelf;
                                              if (strongSelf) {
+#if TRACE_TIME_STATUS || TRACE_ALL
+                                                 NSString *currentItemURL = NULL;
+                                                 RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)self.currentItem;
+                                                 if (item) {
+                                                     currentItemURL = ((RTSPURLAsset *)item.asset).URL.absoluteString;
+                                                 }
+                                                 NSLog(@"RTSPAVPlayer:addPeriodicTimeObserverForInterval url: %@, time: %f, duration: %f", currentItemURL, CMTimeGetSeconds(time), self->_currentItemDuration);
+#endif
                                              }
                                          }];
 }
@@ -127,13 +143,14 @@ static int AAPLPlayerKVOContext = 0;
 
 #pragma mark - RTSPAVPlayerItemDelegate
 
-- (void)dataLoaded {
+- (void)dataLoadedWithDuration:(Float64)duration {
+    _currentItemDuration = duration;
 }
 
 #pragma mark - RTSPSegmentControllerDelegate
 
 - (void)newSegmentReady:(RTSPSegmentStreamer *)segment {
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         RTSPURLAsset *asset = [[RTSPURLAsset alloc] initWithStreamer:(id)segment options:@{@"timeout": [NSNumber numberWithDouble:defaultLoadingTimeout]}];
         asset.delegate = self;
         RTSPAVPlayerItem *item = [RTSPAVPlayerItem playerItemWithAsset:asset automaticallyLoadedAssetKeys:self->_assetKeys];
@@ -147,30 +164,24 @@ static int AAPLPlayerKVOContext = 0;
 
 - (void)headerLoadded:(NSDictionary *)header
                 asset:(RTSPURLAsset *)asset {
+#if TRACE_STATUS || TRACE_ALL
     NSLog(@"RTSPAVPlayer:headerLoadded, completely url: %@, header: %@", asset.URL.absoluteString, header);
-    RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)self.currentItem;
-    if (item) {
-        NSLog(@"RTSPAVPlayer:headerLoadded, currentItem.url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
-    }
+#endif
 }
 
 - (void)dataLoaddedForRange:(NSRange)range
                       asset:(RTSPURLAsset *)asset {
+#if TRACE_STATUS || TRACE_ALL
     NSLog(@"RTSPAVPlayer:newDataLoadded, range: %@, url: %@", [NSValue valueWithRange:range], asset.URL.absoluteString);
-    RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)self.currentItem;
-    if (item) {
-        NSLog(@"RTSPAVPlayer:newDataLoadded, currentItem.url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
-    }
+#endif
 }
 
 - (void)errorLoading:(NSError *)error
             forRange:(NSRange)range
                asset:(RTSPURLAsset *)asset {
+#if TRACE_STATUS || TRACE_ALL
     NSLog(@"RTSPAVPlayer:errorLoading, error: %@, for range: %@", error.localizedDescription, [NSValue valueWithRange:range]);
-    RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)self.currentItem;
-    if (item) {
-        NSLog(@"RTSPAVPlayer:errorLoading, currentItem.url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
-    }
+#endif
 }
 
 #pragma mark - Helpers (Notification handlers)
@@ -178,14 +189,18 @@ static int AAPLPlayerKVOContext = 0;
 - (void)playerStalledHandler:(NSNotification *)notification {
     RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)self.currentItem;
     if (item) {
+#if TRACE_ERROR || TRACE_ALL
         NSLog(@"RTSPAVPlayer:playerStalled, currentItem.url: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString);
+#endif
     }
 }
 
 - (void)errorHandler:(NSNotification *)notification {
     RTSPAVPlayerItem *item = (RTSPAVPlayerItem *)self.currentItem;
     if (item) {
+#if TRACE_ERROR || TRACE_ALL
         NSLog(@"RTSPAVPlayer:errorHandler, currentItem.url: %@, error: %@", ((RTSPURLAsset *)item.asset).URL.absoluteString, item.errorLog);
+#endif
     }
 }
 

@@ -13,7 +13,7 @@
 
 @protocol RTSPAVPlayerItemDelegate <NSObject>
 
-- (void)dataLoaded;
+- (void)dataLoadedWithDuration:(Float64)duration;
 
 @end
 

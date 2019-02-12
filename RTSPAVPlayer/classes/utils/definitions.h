@@ -18,6 +18,13 @@ extern NSTimeInterval const defaultLoadingTimeout;
 extern NSInteger const fakeStreamSize;
 
 @protocol StreamOptions <NSObject>
+
+//#define TRACE_NETWORK 1
+//#define TRACE_ERROR 1
+//#define TRACE_STATUS 1
+//#define TRACE_ALL 1
+#define TRACE_TIME_STATUS 1
+
 @end
 
 #endif /* definitions_h */

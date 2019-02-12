@@ -216,7 +216,7 @@ static int interrupt_cb(void *ctx) {
     //    av_dict_set(&opts, "fflags", "discardcorrupt+nobuffer", 0);
     //    av_dict_set(&opts, "ec", "favor_inter", 0);
     
-    while (1) {
+    while (TRUE) {
         if ((ret = avformat_open_input(&ifmt_ctx, in_filename, 0, &opts)) < 0 || self.isStopped) {
             if (ret < 0) {
                 fprintf(stderr, "Could not open input file '%s', error: %s", in_filename, av_err2str(ret));

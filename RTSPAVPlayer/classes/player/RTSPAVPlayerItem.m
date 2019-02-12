@@ -64,16 +64,21 @@ static int AAPLPlayerItemKVOContext = 0;
     
     if ([keyPath isEqualToString:@"status"]) {
         if (self.status == AVPlayerItemStatusFailed) {
+#if TRACE_ERROR || TRACE_ALL
             NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath status.fail.url: %@, error: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString, self.error);
+#endif
         }
     } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
     } else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
         _isLoaded = TRUE;
-        if ([self.delegate respondsToSelector:@selector(dataLoaded)]) {
-            [self.delegate dataLoaded];
+        if ([self.delegate respondsToSelector:@selector(dataLoadedWithDuration:)]) {
+            Float64 duration = CMTimeGetSeconds(self.asset.duration);
+            [self.delegate dataLoadedWithDuration:duration];
         }
     } else if ([keyPath isEqualToString:@"errorLog"]) {
+#if TRACE_ERROR || TRACE_ALL
         NSLog(@"RTSPAVPlayerItem:observeValueForKeyPath status.Fail.url: %@, error: %@", ((RTSPURLAsset *)self.asset).URL.absoluteString, self.error);
+#endif
     }
 }
 
