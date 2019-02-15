@@ -13,11 +13,9 @@
 #import "RTSPAVPlayerItem.h"
 
 @interface ViewController () {
-    NSArray *assetKeys;
+    NSArray *_assetKeys;
+    AVPlayerLayer *_playerLayer;
 }
-
-@property (nonatomic, weak) AVPlayerLayer *playerLayer;
-@property RTSPAVPlayer *player;
 
 @end
 
@@ -31,34 +29,33 @@
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     [self.view addGestureRecognizer:singleFingerTap];
     
-    assetKeys = @[@"playable"];
+    _assetKeys = @[@"playable"];
     
-    self.player =  [[RTSPAVPlayer alloc] initWithURL:[NSURL URLWithString:@"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"]
+    RTSPAVPlayer *player =  [[RTSPAVPlayer alloc] initWithURL:[NSURL URLWithString:@"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"]
                                              options:NULL
-                        withItemsAutoLoadedAssetKeys:assetKeys];
+                        withItemsAutoLoadedAssetKeys:_assetKeys];
 
     if (@available(iOS 10.0, *)) {
-        self.player.automaticallyWaitsToMinimizeStalling = FALSE;
+        player.automaticallyWaitsToMinimizeStalling = FALSE;
     }
     
-    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-    [self.view.layer addSublayer:playerLayer];
-    self.playerLayer = playerLayer;
-    [self.player play];
+    _playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+    [self.view.layer addSublayer:_playerLayer];
+    [player play];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.playerLayer.frame = self.view.bounds;
+    _playerLayer.frame = self.view.bounds;
 }
 
 #pragma mark - Events handlers
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
-    if (!self.player.isPlaying) {
-        [self.player play];
+    if (!((RTSPAVPlayer *)_playerLayer.player).isPlaying) {
+        [_playerLayer.player play];
     } else {
-        [self.player pause];
+        [_playerLayer.player pause];
     }
 }
 

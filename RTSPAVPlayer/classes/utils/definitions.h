@@ -21,9 +21,9 @@ extern NSInteger const fakeStreamSize;
 
 //#define TRACE_NETWORK 1
 //#define TRACE_ERROR 1
-//#define TRACE_STATUS 1
+#define TRACE_STATUS 1
 //#define TRACE_ALL 1
-#define TRACE_TIME_STATUS 1
+//#define TRACE_TIME_STATUS 1
 
 @end
 
