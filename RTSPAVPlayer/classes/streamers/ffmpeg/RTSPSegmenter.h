@@ -11,12 +11,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class StreamOptions;
-
 @interface RTSPSegmenter: NSObject
 
 - (id)initWithUrl:(NSURL *_Nonnull)url;
-- (id)initWithUrl:(NSURL *_Nonnull)url withOptions:(StreamOptions *)options;
+- (id)initWithUrl:(NSURL *_Nonnull)url withOptions:(NSDictionary *)options;
 - (void)start;
 - (void)stop;
 

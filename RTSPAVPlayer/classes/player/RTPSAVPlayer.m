@@ -27,7 +27,7 @@
 
 static int AAPLPlayerKVOContext = 0;
 
-- (instancetype _Nullable)initWithURL:(NSURL * _Nullable)url options:(StreamOptions * _Nullable)options withItemsAutoLoadedAssetKeys:(nullable NSArray<NSString *> *)itemAutoLoadedAssetKeys {
+- (instancetype)initWithURL:(NSURL * _Nullable)url options:(NSDictionary * _Nullable)options withItemsAutoLoadedAssetKeys:(nullable NSArray<NSString *> *)itemAutoLoadedAssetKeys {
     if (self = [super init]) {
         [self addObservers];
         [self addPeriodicTimeObserver];
@@ -55,8 +55,7 @@ static int AAPLPlayerKVOContext = 0;
     return self;
 }
 
--(void)dealloc {
-    [self removeObservers];
+- (void)dealloc {
 }
 
 - (void)play {
@@ -66,6 +65,7 @@ static int AAPLPlayerKVOContext = 0;
 }
 
 - (void)pause {
+    [super pause];
     if (self.isPlaying) {
         [_RTSPSegmentController stop];
     }
@@ -150,14 +150,16 @@ static int AAPLPlayerKVOContext = 0;
 #pragma mark - RTSPSegmentControllerDelegate
 
 - (void)newSegmentReady:(RTSPSegmentStreamer *)segment {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        RTSPURLAsset *asset = [[RTSPURLAsset alloc] initWithStreamer:(id)segment options:@{@"timeout": [NSNumber numberWithDouble:defaultLoadingTimeout]}];
-        asset.delegate = self;
-        RTSPAVPlayerItem *item = [RTSPAVPlayerItem playerItemWithAsset:asset automaticallyLoadedAssetKeys:self->_assetKeys];
-        item.delegate = self;
-        [self replaceCurrentItemWithPlayerItem:item];//????
-        [super play];
-    });
+    if (self.isPlaying) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            RTSPURLAsset *asset = [[RTSPURLAsset alloc] initWithStreamer:(id)segment options:@{@"timeout": [NSNumber numberWithDouble:defaultLoadingTimeout]}];
+            asset.delegate = self;
+            RTSPAVPlayerItem *item = [RTSPAVPlayerItem playerItemWithAsset:asset automaticallyLoadedAssetKeys:self->_assetKeys];
+            item.delegate = self;
+            [self replaceCurrentItemWithPlayerItem:item];//????
+            [super play];
+        });
+    }
 }
 
 #pragma mark - RTSPAVAssetDelegate

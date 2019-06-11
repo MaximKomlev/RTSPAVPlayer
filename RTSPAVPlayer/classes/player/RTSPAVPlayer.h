@@ -11,11 +11,9 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-@class StreamOptions;
-
 @interface RTSPAVPlayer: AVPlayer
 
-- (instancetype _Nullable)initWithURL:(NSURL * _Nullable)url options:(StreamOptions * _Nullable)options withItemsAutoLoadedAssetKeys:(nullable NSArray<NSString *> *)itemAutoLoadedAssetKeys;
+- (instancetype _Nullable)initWithURL:(NSURL * _Nullable)url options:(NSDictionary * _Nullable)options withItemsAutoLoadedAssetKeys:(nullable NSArray<NSString *> *)itemAutoLoadedAssetKeys;
 
 @property (atomic, readonly) BOOL isPlaying;
 

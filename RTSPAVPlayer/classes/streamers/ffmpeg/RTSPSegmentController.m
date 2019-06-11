@@ -21,7 +21,7 @@
     RTSPSegmenter *_RTSPSegmenter;
 }
 
-- (id)initWithUrl:(NSURL *)url withOptions:(StreamOptions * _Nullable)options {
+- (id)initWithUrl:(NSURL *)url withOptions:(NSDictionary * _Nullable)options {
     if (self = [self init]) {
         _RTSPSegmenter = [[RTSPSegmenter alloc] initWithUrl:url withOptions:options];
         [SegmentsManager instance].delegate = self;

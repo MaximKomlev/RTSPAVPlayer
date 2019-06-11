@@ -12,7 +12,6 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVAssetResourceLoader.h>
 
-@class StreamOptions;
 @class RTSPSegmentStreamer;
 
 @protocol RTSPSegmentControllerDelegate <NSObject>
@@ -23,7 +22,7 @@
 
 @interface RTSPSegmentController: NSObject
 
-- (id)initWithUrl:(NSURL *)url withOptions:(StreamOptions * _Nullable)options;
+- (id)initWithUrl:(NSURL *)url withOptions:(NSDictionary * _Nullable)options;
 
 - (void)start;
 - (void)stop;

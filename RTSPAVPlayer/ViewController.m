@@ -11,6 +11,7 @@
 #import "definitions.h"
 #import "RTSPAVPlayer.h"
 #import "RTSPAVPlayerItem.h"
+#import "RTSPAVPlayer-Swift.h"
 
 @interface ViewController () {
     NSArray *_assetKeys;
@@ -25,16 +26,27 @@
     [super viewDidLoad];
 
     self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+
+    self.title = @"Objective C Sample";
     
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     [self.view addGestureRecognizer:singleFingerTap];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    _playerLayer.frame = self.view.bounds;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
     _assetKeys = @[@"playable"];
     
     RTSPAVPlayer *player =  [[RTSPAVPlayer alloc] initWithURL:[NSURL URLWithString:@"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"]
-                                             options:NULL
-                        withItemsAutoLoadedAssetKeys:_assetKeys];
-
+                                                      options:NULL
+                                 withItemsAutoLoadedAssetKeys:_assetKeys];
+    
     if (@available(iOS 10.0, *)) {
         player.automaticallyWaitsToMinimizeStalling = FALSE;
     }
@@ -42,11 +54,15 @@
     _playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
     [self.view.layer addSublayer:_playerLayer];
     [player play];
+    
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Swift Sample" style:UIBarButtonItemStylePlain target:self action:@selector(buttonNextTouched:)];
+    self.navigationItem.rightBarButtonItem = rightButton;
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    _playerLayer.frame = self.view.bounds;
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [_playerLayer.player pause];
 }
 
 #pragma mark - Events handlers
@@ -57,6 +73,11 @@
     } else {
         [_playerLayer.player pause];
     }
+}
+
+- (void)buttonNextTouched:(id)sender {
+    SwiftViewController *vc = [[SwiftViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

@@ -99,9 +99,9 @@ static void io_close(struct AVFormatContext *s, AVIOContext *pb) {
     BOOL isWritable = (BOOL)ctx->writable;
     [[SegmentsManager instance] stopStreamForUrl:url writable:isWritable];
 //    if (isWritable) {
-//        fprintf(stdout, "Stop writable stream %s", ctx->url);
+//        NSLog(@"RTSPSegmenter:io_close, Stop writable stream %@", url);
 //    } else {
-//        fprintf(stdout, "Stop readable stream %s", ctx->url);
+//        NSLog(@"RTSPSegmenter:io_close, Stop readable stream %@", url);
 //    }
     free(pb->opaque);
     av_free(pb->buffer);
@@ -143,6 +143,10 @@ static int interrupt_cb(void *ctx) {
         _options = options;
     }
     return self;
+}
+
+- (void)dealloc {
+    NSLog(@"RTSPSegmenter:dealloc");
 }
 
 - (void)start {
@@ -219,28 +223,37 @@ static int interrupt_cb(void *ctx) {
     while (TRUE) {
         if ((ret = avformat_open_input(&ifmt_ctx, in_filename, 0, &opts)) < 0 || self.isStopped) {
             if (ret < 0) {
-                fprintf(stderr, "Could not open input file '%s', error: %s", in_filename, av_err2str(ret));
+                char *cErrDesc = av_err2str(ret);
+                NSData *fname = [NSData dataWithBytes:in_filename length:sizeof(in_filename)];
+                NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+                NSLog(@"RTSPSegmenter:startLoading, Could not open input file '%@', error: %@", fname, errDesc);
             }
             break;
         }
         
         if ((ret = avformat_find_stream_info(ifmt_ctx, 0)) < 0 || self.isStopped) {
             if (ret < 0) {
-                fprintf(stderr, "Failed to retrieve input stream information, error: %s", av_err2str(ret));
+                char *cErrDesc = av_err2str(ret);
+                NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+                NSLog(@"RTSPSegmenter:startLoading, Failed to retrieve input stream information, error: %@", errDesc);
             }
             break;
         }
         av_dump_format(ifmt_ctx, 0, in_filename, 0);
         if (!(ofmt_ctx = avformat_alloc_context()) || self.isStopped) {
             ret = AVERROR(ENOMEM);
-            fprintf(stderr, "Could not create output context, error: %s\n", av_err2str(ret));
+            char *cErrDesc = av_err2str(ret);
+            NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+            NSLog(@"RTSPSegmenter:startLoading, Could not create output context, error: %@\n", errDesc);
             break;
         }
         NSMutableString *memoryId = [NSMutableString stringWithString:randomString(16)];
         [memoryId appendString:@"%d.mp4"];
         if ((ret = avformat_alloc_output_context2(&ofmt_ctx, NULL, out_formatname, [memoryId cStringUsingEncoding:NSUTF8StringEncoding]) < 0) || self.isStopped) {
             if (ret < 0) {
-                fprintf(stderr, "Could not create output context, error: %s\n", av_err2str(ret));
+                char *cErrDesc = av_err2str(ret);
+                NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+                NSLog(@"RTSPSegmenter:startLoading, Could not create output context, error: %@\n", errDesc);
             }
             break;
         }
@@ -277,7 +290,9 @@ static int interrupt_cb(void *ctx) {
             
             if ((ret = [self addOutStream:ofmt_ctx basedOn:in_stream]) < 0 || self.isStopped) {
                 if (ret < 0) {
-                    fprintf(stderr, "Failed to copy context from input to output stream codec context, error: %s\n", av_err2str(ret));
+                    char *cErrDesc = av_err2str(ret);
+                    NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+                    NSLog(@"RTSPSegmenter:startLoading, Failed to copy context from input to output stream codec context, error: %@\n", errDesc);
                 }
                 break;
             }
@@ -286,7 +301,9 @@ static int interrupt_cb(void *ctx) {
         if (ret == 0 && !self.isStopped) {
             if ((ret = avformat_write_header(ofmt_ctx, &opts)) < 0 || self.isStopped) {
                 if (ret < 0) {
-                    fprintf(stderr, "Error occurred when opening output file, error: %s\n", av_err2str(ret));
+                    char *cErrDesc = av_err2str(ret);
+                    NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+                    NSLog(@"RTSPSegmenter:startLoading, Error occurred when opening output file, error: %@\n", errDesc);
                 } else {
                     ret = AVERROR_UNKNOWN;
                 }
@@ -312,7 +329,9 @@ static int interrupt_cb(void *ctx) {
     avformat_free_context(ofmt_ctx);
     
     if (ret < 0 && ret != AVERROR_EOF) {
-        fprintf(stderr, "Error occurred: %s\n", av_err2str(ret));
+        char *cErrDesc = av_err2str(ret);
+        NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+        NSLog(@"RTSPSegmenter:startLoading, Error occurred: %@\n", errDesc);
     }
 }
 
@@ -324,7 +343,7 @@ static int interrupt_cb(void *ctx) {
     
     AVStream *out_stream = avformat_new_stream(oc, NULL);
     if (!out_stream) {
-        fprintf(stderr, "Could not allocate stream\n");
+        NSLog(@"RTSPSegmenter:startLoading, Could not allocate stream\n");
         return -1;
     }
     
@@ -365,7 +384,9 @@ static int interrupt_cb(void *ctx) {
     av_packet_unref(&pkt);
 
     if (ret < 0) {
-        fprintf(stderr, "Error muxing packet, error: %s\n", av_err2str(ret));
+        char *cErrDesc = av_err2str(ret);
+        NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
+        NSLog(@"RTSPSegmenter:startLoading, Error muxing packet, error: %@\n", errDesc);
     }
 
     return ret < 0 ? FALSE : TRUE;
