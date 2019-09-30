@@ -29,7 +29,8 @@ class SwiftViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        guard let url = URL(string: "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov") else {
+        //https://www.wowza.com/html/mobile.html
+        guard let url = URL(string: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov") else {
             return
         }
         

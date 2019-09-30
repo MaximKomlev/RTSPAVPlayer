@@ -43,7 +43,8 @@
     
     _assetKeys = @[@"playable"];
     
-    RTSPAVPlayer *player =  [[RTSPAVPlayer alloc] initWithURL:[NSURL URLWithString:@"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"]
+    //https://www.wowza.com/html/mobile.html
+    RTSPAVPlayer *player =  [[RTSPAVPlayer alloc] initWithURL:[NSURL URLWithString:@"rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"]
                                                       options:NULL
                                  withItemsAutoLoadedAssetKeys:_assetKeys];
     
