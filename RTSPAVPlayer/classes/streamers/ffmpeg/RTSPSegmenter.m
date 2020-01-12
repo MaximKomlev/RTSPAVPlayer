@@ -222,39 +222,20 @@ static int interrupt_cb(void *ctx) {
     
     while (TRUE) {
         if ((ret = avformat_open_input(&ifmt_ctx, in_filename, 0, &opts)) < 0 || self.isStopped) {
-            if (ret < 0) {
-                char *cErrDesc = av_err2str(ret);
-                NSData *fname = [NSData dataWithBytes:in_filename length:sizeof(in_filename)];
-                NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-                NSLog(@"RTSPSegmenter:startLoading, Could not open input file '%@', error: %@", fname, errDesc);
-            }
             break;
         }
         
         if ((ret = avformat_find_stream_info(ifmt_ctx, 0)) < 0 || self.isStopped) {
-            if (ret < 0) {
-                char *cErrDesc = av_err2str(ret);
-                NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-                NSLog(@"RTSPSegmenter:startLoading, Failed to retrieve input stream information, error: %@", errDesc);
-            }
             break;
         }
         av_dump_format(ifmt_ctx, 0, in_filename, 0);
         if (!(ofmt_ctx = avformat_alloc_context()) || self.isStopped) {
             ret = AVERROR(ENOMEM);
-            char *cErrDesc = av_err2str(ret);
-            NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-            NSLog(@"RTSPSegmenter:startLoading, Could not create output context, error: %@\n", errDesc);
             break;
         }
         NSMutableString *memoryId = [NSMutableString stringWithString:randomString(16)];
         [memoryId appendString:@"%d.mp4"];
         if ((ret = avformat_alloc_output_context2(&ofmt_ctx, NULL, out_formatname, [memoryId cStringUsingEncoding:NSUTF8StringEncoding]) < 0) || self.isStopped) {
-            if (ret < 0) {
-                char *cErrDesc = av_err2str(ret);
-                NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-                NSLog(@"RTSPSegmenter:startLoading, Could not create output context, error: %@\n", errDesc);
-            }
             break;
         }
         
@@ -289,24 +270,12 @@ static int interrupt_cb(void *ctx) {
             stream_mapping[i] = stream_index++;
             
             if ((ret = [self addOutStream:ofmt_ctx basedOn:in_stream]) < 0 || self.isStopped) {
-                if (ret < 0) {
-                    char *cErrDesc = av_err2str(ret);
-                    NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-                    NSLog(@"RTSPSegmenter:startLoading, Failed to copy context from input to output stream codec context, error: %@\n", errDesc);
-                }
                 break;
             }
         }
         
         if (ret == 0 && !self.isStopped) {
             if ((ret = avformat_write_header(ofmt_ctx, &opts)) < 0 || self.isStopped) {
-                if (ret < 0) {
-                    char *cErrDesc = av_err2str(ret);
-                    NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-                    NSLog(@"RTSPSegmenter:startLoading, Error occurred when opening output file, error: %@\n", errDesc);
-                } else {
-                    ret = AVERROR_UNKNOWN;
-                }
                 break;
             }
         }
@@ -329,9 +298,7 @@ static int interrupt_cb(void *ctx) {
     avformat_free_context(ofmt_ctx);
     
     if (ret < 0 && ret != AVERROR_EOF) {
-        char *cErrDesc = av_err2str(ret);
-        NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-        NSLog(@"RTSPSegmenter:startLoading, Error occurred: %@\n", errDesc);
+        [self errorHandling:ret];
     }
 }
 
@@ -343,8 +310,7 @@ static int interrupt_cb(void *ctx) {
     
     AVStream *out_stream = avformat_new_stream(oc, NULL);
     if (!out_stream) {
-        NSLog(@"RTSPSegmenter:startLoading, Could not allocate stream\n");
-        return -1;
+        return AVERROR(EINVAL);
     }
     
     out_stream->id = in_stream->id;
@@ -384,12 +350,17 @@ static int interrupt_cb(void *ctx) {
     av_packet_unref(&pkt);
 
     if (ret < 0) {
-        char *cErrDesc = av_err2str(ret);
-        NSData *errDesc = [NSData dataWithBytes:cErrDesc length:sizeof(cErrDesc)];
-        NSLog(@"RTSPSegmenter:startLoading, Error muxing packet, error: %@\n", errDesc);
+        [self errorHandling:ret];
     }
 
     return ret < 0 ? FALSE : TRUE;
+}
+
+- (void)errorHandling:(int)errorNum {
+    char *cErrDesc = av_err2str(errorNum);
+    NSString *in_file_path  = _sessionUrl.absoluteString;
+    NSString *errDesc = [NSString stringWithFormat:@"File '%@' processing error: %s", in_file_path, cErrDesc];
+    NSLog(@"RTSPSegmenter, %@", errDesc);
 }
 
 #pragma mark - Helpers (Sync)
