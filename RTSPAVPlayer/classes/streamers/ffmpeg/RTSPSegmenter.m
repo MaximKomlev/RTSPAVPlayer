@@ -293,9 +293,16 @@ static int interrupt_cb(void *ctx) {
     }
     
     av_dict_free(&opts);
-    
-    avformat_close_input(&ifmt_ctx);
-    avformat_free_context(ofmt_ctx);
+
+    if (ifmt_ctx) {
+        avformat_close_input(&ifmt_ctx);
+        avformat_free_context(ifmt_ctx);
+    }
+
+    if (ofmt_ctx) {
+        ofmt_ctx->interrupt_callback.opaque = NULL;
+        avformat_free_context(ofmt_ctx);
+    }
     
     if (ret < 0 && ret != AVERROR_EOF) {
         [self errorHandling:ret];
@@ -337,10 +344,9 @@ static int interrupt_cb(void *ctx) {
         //log_packet(ifmt_ctx, &pkt, "in");
 
         /* copy packet */
-        pkt.pts = av_rescale_q_rnd(pkt.pts, in_stream->time_base, out_stream->time_base, AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX);
-        pkt.dts = av_rescale_q_rnd(pkt.dts, in_stream->time_base, out_stream->time_base, AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX);
-        pkt.duration = av_rescale_q(pkt.duration, in_stream->time_base, out_stream->time_base);
-        pkt.pos = -1;
+        av_packet_rescale_ts(&pkt,
+                             in_stream->time_base,
+                             out_stream->time_base);
         
         //log_packet(ofmt_ctx, &pkt, "out");
         if (pkt.dts != AV_NOPTS_VALUE) {

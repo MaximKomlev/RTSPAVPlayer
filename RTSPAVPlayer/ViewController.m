@@ -35,6 +35,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+
     _playerLayer.frame = self.view.bounds;
 }
 
