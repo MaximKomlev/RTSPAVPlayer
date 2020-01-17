@@ -34,6 +34,9 @@
 		BC36982D21B863A9004F9AF3 /* RTSPSegmentController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC36982C21B863A8004F9AF3 /* RTSPSegmentController.m */; };
 		BC62727721B1FCB20047D3F2 /* stringutils.m in Sources */ = {isa = PBXBuildFile; fileRef = BC62727621B1FCB20047D3F2 /* stringutils.m */; };
 		BC8999ED22AF2FEC00FC72C7 /* SwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8999EC22AF2FEC00FC72C7 /* SwiftViewController.swift */; };
+		BC89C9DD23D200060013D97D /* build-ffmpeg.sh in Resources */ = {isa = PBXBuildFile; fileRef = BC89C9DA23D200060013D97D /* build-ffmpeg.sh */; };
+		BC89C9DE23D200060013D97D /* build-ffmpeg-iOS-framework.sh in Resources */ = {isa = PBXBuildFile; fileRef = BC89C9DB23D200060013D97D /* build-ffmpeg-iOS-framework.sh */; };
+		BC89C9DF23D200060013D97D /* build-ffmpeg-tvos.sh in Resources */ = {isa = PBXBuildFile; fileRef = BC89C9DC23D200060013D97D /* build-ffmpeg-tvos.sh */; };
 		BCC85CE221C47EFB0005CBB0 /* RTPSAVPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC85CE121C47EFB0005CBB0 /* RTPSAVPlayer.m */; };
 		BCC85CE521C480690005CBB0 /* RTSPAVPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC85CE421C480690005CBB0 /* RTSPAVPlayerItem.m */; };
 		BCCFFEC021BB47AA00B594AB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCFFEB521BB47A900B594AB /* Accelerate.framework */; };
@@ -106,6 +109,9 @@
 		BC62727621B1FCB20047D3F2 /* stringutils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = stringutils.m; sourceTree = "<group>"; };
 		BC8999E722AF1D6B00FC72C7 /* RTSPAVPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTSPAVPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		BC8999EC22AF2FEC00FC72C7 /* SwiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftViewController.swift; sourceTree = "<group>"; };
+		BC89C9DA23D200060013D97D /* build-ffmpeg.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "build-ffmpeg.sh"; path = "thirdparty/ffmpeg/general/build-ffmpeg.sh"; sourceTree = "<group>"; };
+		BC89C9DB23D200060013D97D /* build-ffmpeg-iOS-framework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "build-ffmpeg-iOS-framework.sh"; path = "thirdparty/ffmpeg/general/build-ffmpeg-iOS-framework.sh"; sourceTree = "<group>"; };
+		BC89C9DC23D200060013D97D /* build-ffmpeg-tvos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "build-ffmpeg-tvos.sh"; path = "thirdparty/ffmpeg/general/build-ffmpeg-tvos.sh"; sourceTree = "<group>"; };
 		BCC85CE021C47EE40005CBB0 /* RTSPAVPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTSPAVPlayer.h; sourceTree = "<group>"; };
 		BCC85CE121C47EFB0005CBB0 /* RTPSAVPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTPSAVPlayer.m; sourceTree = "<group>"; };
 		BCC85CE321C4805A0005CBB0 /* RTSPAVPlayerItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTSPAVPlayerItem.h; sourceTree = "<group>"; };
@@ -227,6 +233,7 @@
 		BC2BD61C218B6B7A0098C90A /* RTSPAVPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				BC89C9D923D1FFEE0013D97D /* scripts */,
 				BC8FD194220CC4B500C84DD7 /* docs */,
 				BC2BD641218B823A0098C90A /* classes */,
 				BC2BD61D218B6B7A0098C90A /* AppDelegate.h */,
@@ -318,6 +325,16 @@
 				BC09B7CC21C0805000B0A3E0 /* definitions.m */,
 			);
 			path = utils;
+			sourceTree = "<group>";
+		};
+		BC89C9D923D1FFEE0013D97D /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				BC89C9DB23D200060013D97D /* build-ffmpeg-iOS-framework.sh */,
+				BC89C9DC23D200060013D97D /* build-ffmpeg-tvos.sh */,
+				BC89C9DA23D200060013D97D /* build-ffmpeg.sh */,
+			);
+			name = scripts;
 			sourceTree = "<group>";
 		};
 		BC8FD194220CC4B500C84DD7 /* docs */ = {
@@ -576,9 +593,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC89C9DF23D200060013D97D /* build-ffmpeg-tvos.sh in Resources */,
 				BC2BD62A218B6B7C0098C90A /* LaunchScreen.storyboard in Resources */,
 				BC2BD627218B6B7C0098C90A /* Assets.xcassets in Resources */,
+				BC89C9DD23D200060013D97D /* build-ffmpeg.sh in Resources */,
 				BC05C084220EA5150079F9B0 /* README.md in Resources */,
+				BC89C9DE23D200060013D97D /* build-ffmpeg-iOS-framework.sh in Resources */,
 				BC05C083220EA5150079F9B0 /* LICENSE in Resources */,
 				BC2BD625218B6B7A0098C90A /* Main.storyboard in Resources */,
 			);
